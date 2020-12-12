@@ -16,3 +16,7 @@ In a sense, it's like pulling the break, and taking things slow and steady.
 
 ## References
 WIP
+* [Sebastian Aaltonen - Making Of Claybook](https://www.youtube.com/watch?v=Xpf7Ua3UqOA)  
+* [Inigo Quilez - Raymarching SDFs](https://www.iquilezles.org/www/articles/raymarchingdf/raymarchingdf.htm)  
+* [Inigo Quilez - Rendering Worlds with Two Triangleswith raytracing on the GPUin 4096 bytes](https://www.iquilezles.org/www/material/nvscene2008/rwwtt.pdf)  
+* [Keenan Crane - Ray Tracing Quaternion Julia Sets on the GPU](https://www.cs.cmu.edu/~kmcrane/Projects/QuaternionJulia/paper.pdf)
