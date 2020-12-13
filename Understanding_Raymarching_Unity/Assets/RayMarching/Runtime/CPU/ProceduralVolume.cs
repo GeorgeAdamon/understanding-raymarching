@@ -1,3 +1,4 @@
+using RayMarching.Runtime.CPU.Interfaces;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -10,26 +11,33 @@ namespace RayMarching.Runtime.CPU
     
     [ExecuteAlways]
     [RequireComponent(typeof(BoxCollider))]
-    public class Volume : RayMarchingPassBase
+    public class ProceduralVolume : RayMarchingPassBase, IVolumeSampler
     {
         [Range(8, 128)]
         public int resolution;
+      
         
-        
+        // PRIVATE FIELDS ----------------------------------------------------------------------------------------------
         private BoxCollider bounds;
         
         private NativeArray<Bounds> voxelsBuffer;
 
-        
+
+        public float3 Min => bounds.bounds.min;
+
+        public float3 Max => bounds.bounds.max;
+
+        public int3 Resolution => (int3) math.ceil(resolution * RelativeDimensions);
+
+        // PRIVATE PROPERTIES ------------------------------------------------------------------------------------------
         private float VoxelSize => MaxSide / resolution;
 
-        private int3 Count => (int3) math.ceil(resolution * RelativeDimensions);
         
         private int VoxelCount
         {
             get
             {
-                var cnt = Count;
+                var cnt = Resolution;
                 return cnt.x * cnt.y * cnt.z;
             }
         }
@@ -38,7 +46,8 @@ namespace RayMarching.Runtime.CPU
 
         private float3 RelativeDimensions => bounds.bounds.size / MaxSide;
 
-
+        
+        // MONOBEHAVIOUR -----------------------------------------------------------------------------------------------
         private void OnEnable()
         {
             bounds = GetComponent<BoxCollider>();
@@ -50,7 +59,9 @@ namespace RayMarching.Runtime.CPU
             
             Execute();
         }
-
+     
+        
+        // RAYMARCHINGPASSBASE -----------------------------------------------------------------------------------------
         protected override void Allocate(int voxelCount)
         {
             if (voxelsBuffer.IsCreated && voxelCount == voxelsBuffer.Length)
@@ -73,7 +84,7 @@ namespace RayMarching.Runtime.CPU
             {
                     voxels = voxelsBuffer,
                     size   = VoxelSize,
-                    count  = Count,
+                    count  = Resolution,
                     offset = bounds.bounds.min
             }.Schedule(voxelsBuffer.Length, 128).Complete();
         }
@@ -91,7 +102,29 @@ namespace RayMarching.Runtime.CPU
             }
         }
 
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            Gizmos.DrawWireCube(bounds.center, bounds.size);
+            
+        }
 
+        // IVOLUMESAMPLER ----------------------------------------------------------------------------------------------
+        public float4 Sample(int3 xyz)
+        {
+            int i = xyz.x + xyz.y * Resolution.x + xyz.z * Resolution.x * Resolution.y;
+            var a= voxelsBuffer[i];
+            return math.length(a.center);
+        }
+        
+        public Bounds SampleBox(int3 xyz)
+        {
+            int i = xyz.x + xyz.y * Resolution.x + xyz.z * Resolution.x * Resolution.y;
+            return  voxelsBuffer[i];
+          
+        }
+        
+        // JOBS --------------------------------------------------------------------------------------------------------
         [BurstCompile]
         private struct GenerateVoxelsJob : IJobParallelFor
         {
