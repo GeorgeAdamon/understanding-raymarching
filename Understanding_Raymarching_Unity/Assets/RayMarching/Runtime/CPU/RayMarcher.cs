@@ -1,16 +1,22 @@
-﻿using Unity.Collections;
+﻿using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace RayMarching.Runtime.CPU
 {
     public class RayMarcher:RayMarchingPassBase
     {
+     
+        public int                rayCount;
+   
         protected override void Visualize()
         {
         }
 
         protected override void Allocate(int collectionLength)
         {
+            rayCount = collectionLength;
         }
 
         protected override void DeAllocate()
@@ -27,5 +33,9 @@ namespace RayMarching.Runtime.CPU
 
             Execute();
         }
+
+
+        
+    
     }
 }

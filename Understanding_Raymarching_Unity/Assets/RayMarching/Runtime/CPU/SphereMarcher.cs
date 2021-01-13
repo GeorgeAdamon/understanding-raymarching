@@ -31,5 +31,7 @@ namespace RayMarching.Runtime.CPU
 
             Execute();
         }
+        
+        
     }
 }

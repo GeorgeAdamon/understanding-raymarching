@@ -15,19 +15,20 @@ namespace RayMarching.Runtime.CPU
     {
         [Range(8, 128)]
         public int resolution;
-      
+
+        public Texture3D volumeAsset;
         
         // PRIVATE FIELDS ----------------------------------------------------------------------------------------------
         private BoxCollider bounds;
         
         private NativeArray<Bounds> voxelsBuffer;
 
-
         public float3 Min => bounds.bounds.min;
 
         public float3 Max => bounds.bounds.max;
 
         public int3 Resolution => (int3) math.ceil(resolution * RelativeDimensions);
+
 
         // PRIVATE PROPERTIES ------------------------------------------------------------------------------------------
         private float VoxelSize => MaxSide / resolution;
