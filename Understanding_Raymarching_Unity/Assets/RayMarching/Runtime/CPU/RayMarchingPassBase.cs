@@ -21,7 +21,7 @@ namespace RayMarching.Runtime.CPU
 
         //---------------------------------------------------------------------
 
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             _camera = Camera.main;
         }
