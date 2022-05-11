@@ -10,9 +10,10 @@ In a sense, it's like pulling the break, and taking things slow and steady.
 - [x] **Volume Texture Proxy Generation**
 - [x] **Camera Ray Generation**
 - [x] **Ray-AABB Intersection**
-- [x] Ray-Marching
+- [x] **Ray-Marching**
 - [ ] Sphere-Marching
 - [ ] Cone-Marching
+- [ ] Density Accumulation
 
 ## References
 WIP
