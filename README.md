@@ -6,6 +6,8 @@ By executing the individual steps of a RayMarching Pipeline on the CPU, instead 
 
 In a sense, it's like pulling the break, and taking things slow and steady.
  
+ ![](/img/04_raymarching_step.png)
+ 
 ## Passes Implemented so far
 - [x] **Volume Texture Proxy Generation**
 - [x] **Camera Ray Generation**
