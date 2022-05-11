@@ -4,32 +4,23 @@ using UnityEngine;
 
 namespace RayMarching.Runtime.CPU
 {
-    public class ConeMarcher:RayMarchingPassBase
+    public class ConeMarcher:MarcherBase
     {
         [Range(0, 45)]
         public float angle;
        
         protected override void Visualize()
-        {
-        }
+        { }
 
         protected override void Allocate(int collectionLength)
         {
+            base.Allocate(collectionLength);
         }
 
-        protected override void DeAllocate()
-        {
-        }
+        protected override void Deallocate()
+        { }
 
         protected override void Execute()
-        {
-        }
-        
-        public void OnIntersectionResultsReceived(NativeArray<float3> entry, NativeArray<float3> exit)
-        {
-            Allocate(entry.Length);
-
-            Execute();
-        }
+        { }
     }
 }

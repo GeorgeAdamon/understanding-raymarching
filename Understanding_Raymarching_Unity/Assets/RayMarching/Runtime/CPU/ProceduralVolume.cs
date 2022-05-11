@@ -16,7 +16,6 @@ namespace RayMarching.Runtime.CPU
         [Range(8, 128)]
         public int resolution;
 
-        public Texture3D volumeAsset;
         
         // PRIVATE FIELDS ----------------------------------------------------------------------------------------------
         private BoxCollider bounds;
@@ -68,12 +67,12 @@ namespace RayMarching.Runtime.CPU
             if (voxelsBuffer.IsCreated && voxelCount == voxelsBuffer.Length)
                 return;
         
-            DeAllocate();
+            Deallocate();
            
             voxelsBuffer = new NativeArray<Bounds>(voxelCount, Allocator.Persistent);
         }
 
-        protected override void DeAllocate()
+        protected override void Deallocate()
         {
             if (voxelsBuffer.IsCreated)
                 voxelsBuffer.Dispose();

@@ -14,7 +14,7 @@ namespace RayMarching.Runtime.CPU
     public class RayBoxIntersector : RayMarchingPassBase
     {
         [Serializable]
-        public class CameraRaysIntersectionEvent:UnityEvent<NativeArray<float3>, NativeArray<float3>>
+        public class CameraRaysIntersectionEvent:UnityEvent<NativeArray<float3>, NativeArray<float3>, NativeArray<bool>>
         { }
 
         public BoxCollider                 box;
@@ -24,10 +24,6 @@ namespace RayMarching.Runtime.CPU
         private NativeArray<float3> boxEntryPoints;
         private NativeArray<float3> boxExitPoints;
         private NativeArray<bool>   boxIntersectionResults;
-        
-
-        private void Start()
-        { }
         
         public void OnRaysReceived(NativeArray<Ray> rays)
         {
@@ -46,7 +42,7 @@ namespace RayMarching.Runtime.CPU
             boxIntersectionResults = new NativeArray<bool>(rayCount, Allocator.Persistent);
         }
 
-        protected override void DeAllocate()
+        protected override void Deallocate()
         {
             if (boxEntryPoints.IsCreated)
                 boxEntryPoints.Dispose();
@@ -69,7 +65,7 @@ namespace RayMarching.Runtime.CPU
                     bounds   = box.bounds
             }.Schedule(cachedRays.Length, 32).Complete();
             
-            OnRaysAABBIntersection.Invoke(boxEntryPoints, boxExitPoints);
+            OnRaysAABBIntersection.Invoke(boxEntryPoints, boxExitPoints, boxIntersectionResults);
         }
         
         protected override void Visualize()
@@ -95,7 +91,7 @@ namespace RayMarching.Runtime.CPU
                 if (boxIntersectionResults[i] == false)
                     continue;
 
-                Debug.DrawLine(boxEntryPoints[i], boxExitPoints[i], new Color(0.3f,0.2f,0.8f,1));
+                Debug.DrawLine(boxEntryPoints[i], boxExitPoints[i], new Color(0.3f,0.2f,0.8f,0.7f));
             }
            
         }

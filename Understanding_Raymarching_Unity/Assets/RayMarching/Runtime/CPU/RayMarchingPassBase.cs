@@ -11,10 +11,21 @@ namespace RayMarching.Runtime.CPU
         
         public Texture3D          volumeAsset;
        
+        [Header("Debug")] public Material mat;
+
         public NativeArray<float> volumeData => volumeAsset.GetPixelData<float>(0);
+
+        protected Camera _camera;
         
+        protected Mesh visMesh;
+
         //---------------------------------------------------------------------
-        
+
+        protected void OnEnable()
+        {
+            _camera = Camera.main;
+        }
+
         protected virtual void OnDrawGizmos()
         {
             if (shouldVisualize)
@@ -25,7 +36,7 @@ namespace RayMarching.Runtime.CPU
 
         protected abstract void Allocate(int collectionLength);
 
-        protected abstract void DeAllocate();
+        protected abstract void Deallocate();
 
         protected abstract void Execute();
 
@@ -34,17 +45,17 @@ namespace RayMarching.Runtime.CPU
         
         protected virtual void OnDestroy()
         {
-            DeAllocate();
+            Deallocate();
         }
 
         protected virtual void OnDisable()
         {
-            DeAllocate();
+            Deallocate();
         }
 
         protected virtual void OnApplicationQuit()
         {
-            DeAllocate();
+            Deallocate();
         }
        
      

@@ -15,27 +15,20 @@ public class RayShooter : RayMarchingPassBase
     [Serializable]
     public class RaysCalculatedEvent:UnityEvent<NativeArray<Ray>>{}
     
-    [Range(8,128)]
+    [Range(8,512)]
     public int resolutionX = 32;
     public  RaysCalculatedEvent OnRaysCalculated;
-
-    private Camera cam;
     
-    private int    resolutionY => (int) (resolutionX / cam.aspect);
+    private int    resolutionY => (int) (resolutionX / _camera.aspect);
 
     private int RayCount => resolutionX * resolutionY;
     
     private NativeArray<Ray> rays;
  
-    
-    private void OnEnable()
-    {
-        cam = Camera.main;
-    }
 
     private void Update()
     {
-        if (cam == null)
+        if (_camera == null)
             return;
    
         Allocate(RayCount);
@@ -48,12 +41,12 @@ public class RayShooter : RayMarchingPassBase
         if (rays.IsCreated && rayCount == rays.Length)
             return;
         
-        DeAllocate();
+        Deallocate();
         
         rays = new NativeArray<Ray>(rayCount, Allocator.Persistent); 
     }
 
-    protected override void DeAllocate()
+    protected override void Deallocate()
     {
         if (rays.IsCreated)
             rays.Dispose();
@@ -64,8 +57,8 @@ public class RayShooter : RayMarchingPassBase
         new CalculateRays
                 {
                         rays                =  rays,
-                        worldToCameraMatrix = cam.worldToCameraMatrix,
-                        projectionMatrix    = cam.projectionMatrix,
+                        worldToCameraMatrix = _camera.worldToCameraMatrix,
+                        projectionMatrix    = _camera.projectionMatrix,
                         count               =  new int2(resolutionX, resolutionY),
                 }.Schedule(rays.Length, 128)
                  .Complete();
@@ -81,7 +74,7 @@ public class RayShooter : RayMarchingPassBase
         
         for (var i = 0; i < rays.Length; i++)
         {
-            Debug.DrawRay(rays[i].origin, rays[i].direction * (cam.farClipPlane -cam.nearClipPlane) , new Color(0.7f,0.45f,0.2f,1));
+            Debug.DrawRay(rays[i].origin, rays[i].direction * (_camera.farClipPlane -_camera.nearClipPlane) , new Color(0.7f,0.45f,0.2f,1));
         }
     }
 

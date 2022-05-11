@@ -4,34 +4,23 @@ using Unity.Mathematics;
 
 namespace RayMarching.Runtime.CPU
 {
-    public class SphereMarcher:RayMarchingPassBase
+    public class SphereMarcher:MarcherBase
     {
         [Range(0,3)]
         public float radius;
        
         protected override void Visualize()
-        {
-        }
+        { }
 
         protected override void Allocate(int collectionLength)
         {
+            base.Allocate(collectionLength);
         }
 
-        protected override void DeAllocate()
-        {
-        }
+        protected override void Deallocate()
+        { }
 
         protected override void Execute()
-        {
-        }
-        
-        public void OnIntersectionResultsReceived(NativeArray<float3> entry, NativeArray<float3> exit)
-        {
-            Allocate(entry.Length);
-
-            Execute();
-        }
-        
-        
+        { }
     }
 }
